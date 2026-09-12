@@ -54,10 +54,10 @@ public class ProdutoService {
                 .orElseThrow(() ->
                         new RuntimeException("Categoria não encontrada"));
 
-        produto.setNome(produtoAtualizado.getNome());
-        produto.setCodigo(produtoAtualizado.getCodigo());
-        produto.setPreco(produtoAtualizado.getPreco());
-        produto.setEstoque(produtoAtualizado.getEstoque());
+        produto.setNomeProduto(produtoAtualizado.getNomeProduto());
+        produto.setCodigoProduto(produtoAtualizado.getCodigoProduto());
+        produto.setPrecoProduto(produtoAtualizado.getPrecoProduto());
+        produto.setEstoqueProduto(produtoAtualizado.getEstoqueProduto());
         produto.setCategoria(categoria);
 
         return produtoRepository.save(produto);

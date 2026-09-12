@@ -22,19 +22,19 @@ public class Produto {
     private Long idProduto;
 
     @Column(name = "nome", nullable = false, length = 100)
-    private String nome;
+    private String nomeProduto;
 
     @Column(name = "codigo", nullable = false, length = 20)
-    private String codigo;
+    private String codigoProduto;
 
     @Column(name = "descricao")
-    private String descricao;
+    private String descricaoProduto;
 
     @Column(name = "estoque", nullable = false)
-    private int estoque;
+    private int estoqueProduto;
 
     @Column(name = "preco", nullable = false)
-    private double preco;
+    private double precoProduto;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)
