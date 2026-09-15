@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProdutoResponseDTO {
 
-    private String idProduto;
+    private Long idProduto;
 
     private String nomeProduto;
 
