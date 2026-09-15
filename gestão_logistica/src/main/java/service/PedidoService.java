@@ -3,7 +3,10 @@ package service;
 import entity.Pedido;
 import org.springframework.stereotype.Service;
 import repository.PedidoRepository;
+import DTO.Pedido.PedidoRequestDTO;
+import DTO.Pedido.PedidoResponseDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,44 +18,77 @@ public class PedidoService {
         this.pedidoRepository = pedidoRepository;
     }
 
-    public Pedido salvar(Pedido pedido) {
-        return pedidoRepository.save(pedido);
+
+    private PedidoResponseDTO converterParaResponse(Pedido pedido){
+
+        PedidoResponseDTO response = new PedidoResponseDTO();
+
+        response.setIdPedido(pedido.getIdPedido());
+        response.setDataPedido(pedido.getDataPedido());
+        response.setStatusPedido(pedido.getStatusPedido());
+        response.setValorTotal(pedido.getValorTotal());
+
+        return response;
     }
 
-    public List<Pedido> listar() {
-        return pedidoRepository.findAll();
+
+    public PedidoResponseDTO salvar(PedidoRequestDTO pedidoRequestDTO) {
+
+        Pedido pedido = new Pedido();
+
+        pedido.setDataPedido(pedidoRequestDTO.getDataPedido());
+        pedido.setStatusPedido(pedidoRequestDTO.getStatusPedido());
+        pedido.setValorTotal(pedidoRequestDTO.getValorTotal());
+
+        Pedido pedidoSalvo = pedidoRepository.save(pedido);
+
+        return converterParaResponse(pedidoSalvo);
+
     }
 
-    public Pedido buscarPorId(Long id) {
-        return pedidoRepository.findById(id)
+    public List<PedidoResponseDTO> listar() {
+
+            List<Pedido> pedidos = pedidoRepository.findAll();
+
+            List<PedidoResponseDTO> responses = new ArrayList<>();
+
+            for (Pedido pedido : pedidos) {
+                PedidoResponseDTO response = converterParaResponse(pedido);
+                responses.add(response);
+            }
+
+            return responses;
+    }
+
+    public PedidoResponseDTO buscarPorId(Long id) {
+
+        Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Pedido não encontrado"));
+
+        return converterParaResponse(pedido);
     }
 
-    public Pedido atualizar(
-            Long id,
-            Pedido pedidoAtualizado) {
+    public PedidoResponseDTO atualizar(Long id, PedidoRequestDTO request) {
 
-        Pedido pedido = buscarPorId(id);
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Pedido não encontrado"));
 
-        pedido.setDataPedido(
-                pedidoAtualizado.getDataPedido()
-        );
+        pedido.setDataPedido(request.getDataPedido());
+        pedido.setStatusPedido(request.getStatusPedido());
+        pedido.setValorTotal(request.getValorTotal());
 
-        pedido.setStatusPedido(
-                pedidoAtualizado.getStatusPedido()
-        );
+        Pedido pedidoAtualizado = pedidoRepository.save(pedido);
 
-        pedido.setValorTotal(
-                pedidoAtualizado.getValorTotal()
-        );
-
-        return pedidoRepository.save(pedido);
+        return converterParaResponse(pedidoAtualizado);
     }
 
     public void excluir(Long id) {
 
-        Pedido pedido = buscarPorId(id);
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Pedido não encontrado"));
 
         pedidoRepository.delete(pedido);
     }
