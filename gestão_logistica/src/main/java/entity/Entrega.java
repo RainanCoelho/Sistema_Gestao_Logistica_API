@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -23,10 +24,10 @@ public class Entrega {
     private Long idEntrega;
 
     @Column(name = "data_hora_prevista")
-    private LocalDate dataHoraPrevista;
+    private LocalDateTime dataHoraPrevista;
 
     @Column(name = "data_hora_entrega")
-    private LocalDate dataHoraEntrega;
+    private LocalDateTime dataHoraEntrega;
 
     @Column(name = "status")
     private String statusEntrega;
@@ -42,6 +43,11 @@ public class Entrega {
     @ManyToOne
     @JoinColumn(name = "produto_id")
     private Produto produto;
+
+    @ManyToOne
+    @JoinColumn(name = "id_item_produto")
+    private ItemProduto itemProduto;
+
 
     @ManyToOne
     @JoinColumn(name = "veiculo_id")
