@@ -1,6 +1,9 @@
 package controller;
 
+import DTO.Entrega.EntregaRequestDTO;
+import DTO.Entrega.EntregaResponseDTO;
 import entity.Entrega;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.EntregaService;
@@ -18,48 +21,49 @@ public class EntregaController {
     }
 
     @PostMapping
-    public ResponseEntity<Entrega> salvar(
-            @RequestBody Entrega entrega,
-            @RequestParam Long motoristaId,
-            @RequestParam Long clienteId,
-            @RequestParam Long produtoId,
-            @RequestParam Long veiculoId) {
+    public ResponseEntity<EntregaResponseDTO> salvar(
+            @RequestBody EntregaRequestDTO request) {
 
-        return ResponseEntity.ok(
-                entregaService.salvar(
-                        entrega,
-                        motoristaId,
-                        clienteId,
-                        produtoId,
-                        veiculoId
-                )
-        );
+        EntregaResponseDTO response = entregaService.salvar(request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<Entrega>> listar() {
+    public ResponseEntity<List<EntregaResponseDTO>> listar() {
 
-        return ResponseEntity.ok(
-                entregaService.listar()
-        );
+        List<EntregaResponseDTO> response = entregaService.listar();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Entrega> buscarPorId(
-            @PathVariable Long id) {
+    public ResponseEntity<EntregaResponseDTO> buscarPorId(
+            @PathVariable("id") Long id) {
 
-        return ResponseEntity.ok(
-                entregaService.buscarPorId(id)
-        );
+        EntregaResponseDTO response = entregaService.buscarPorId(id);
+
+        return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<Entrega> atualizarStatus(
-            @PathVariable Long id,
-            @RequestParam String status) {
+    @PutMapping("/{id}")
+    public ResponseEntity<EntregaResponseDTO> atualizar(
+            @PathVariable("id") Long id,
+            @RequestBody EntregaRequestDTO request) {
 
-        return ResponseEntity.ok(
-                entregaService.atualizarStatus(id, status)
-        );
+        EntregaResponseDTO response = entregaService.atualizar(id, request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(
+            @PathVariable("id") Long id) {
+
+        entregaService.excluir(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

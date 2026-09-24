@@ -1,6 +1,8 @@
 package controller;
 
-import entity.Veiculo;
+import DTO.Veiculo.VeiculoRequestDTO;
+import DTO.Veiculo.VeiculoResponseDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.VeiculoService;
@@ -18,44 +20,43 @@ public class VeiculoController {
     }
 
     @PostMapping
-    public ResponseEntity<Veiculo> salvar(
-            @RequestBody Veiculo veiculo) {
+    public ResponseEntity<VeiculoResponseDTO> salvar(@RequestBody VeiculoRequestDTO request){
+        VeiculoResponseDTO response = veiculoService.salvar(request);
 
-        return ResponseEntity.ok(
-                veiculoService.salvar(veiculo)
-        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<Veiculo>> listar() {
+    public ResponseEntity<List<VeiculoResponseDTO>> listar() {
 
-        return ResponseEntity.ok(
-                veiculoService.listar()
-        );
+        List<VeiculoResponseDTO> response = veiculoService.listar();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Veiculo> buscarPorId(
-            @PathVariable Long id) {
+    public ResponseEntity<VeiculoResponseDTO> buscarPorId(
+            @PathVariable("id") Long id) {
 
-        return ResponseEntity.ok(
-                veiculoService.buscarPorId(id)
-        );
+        VeiculoResponseDTO responseDTO = veiculoService.buscarPorId(id);
+
+        return ResponseEntity.ok(responseDTO);
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Veiculo> atualizar(
-            @PathVariable Long id,
-            @RequestBody Veiculo veiculo) {
+    public ResponseEntity<VeiculoResponseDTO> atualizar(
+            @PathVariable("id") Long id,
+            @RequestBody VeiculoRequestDTO request) {
 
-        return ResponseEntity.ok(
-                veiculoService.atualizar(id, veiculo)
-        );
+        VeiculoResponseDTO responseDTO = veiculoService.atualizar(id, request);
+
+        return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
 
         veiculoService.desativar(id);
 

@@ -1,6 +1,9 @@
 package controller;
 
+import DTO.Categoria.CategoriaRequestDTO;
+import DTO.Categoria.CategoriaResponseDTO;
 import entity.Categoria;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.CategoriaService;
@@ -18,44 +21,46 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<Categoria> salvar(
-            @RequestBody Categoria categoria) {
+    public ResponseEntity<CategoriaResponseDTO> salvar(
+            @RequestBody CategoriaRequestDTO request) {
 
-        return ResponseEntity.ok(
-                categoriaService.salvar(categoria)
-        );
+        CategoriaResponseDTO response = categoriaService.salvar(request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<Categoria>> listar() {
+    public ResponseEntity<List<CategoriaResponseDTO>> listar() {
 
-        return ResponseEntity.ok(
-                categoriaService.listar()
-        );
+        List<CategoriaResponseDTO> response = categoriaService.listar();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Categoria> buscarPorId(
-            @PathVariable Long id) {
+    public ResponseEntity<CategoriaResponseDTO> buscarPorId(
+            @PathVariable("id") Long id) {
 
-        return ResponseEntity.ok(
-                categoriaService.buscarPorId(id)
-        );
+        CategoriaResponseDTO response = categoriaService.buscarPorId(id);
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> atualizar(
-            @PathVariable Long id,
-            @RequestBody Categoria categoria) {
+    public ResponseEntity<CategoriaResponseDTO> atualizar(
+            @PathVariable("id") Long id,
+            @RequestBody CategoriaRequestDTO request) {
 
-        return ResponseEntity.ok(
-                categoriaService.atualizar(id, categoria)
-        );
+        CategoriaResponseDTO response = categoriaService.atualizar(id, request);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
 
         categoriaService.excluir(id);
 

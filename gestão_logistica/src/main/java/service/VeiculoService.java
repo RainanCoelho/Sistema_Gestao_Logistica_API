@@ -18,6 +18,22 @@ public class VeiculoService {
         this.veiculoRepository = veiculoRepository;
     }
 
+    private VeiculoResponseDTO converterParaResponse(Veiculo veiculo) {
+
+        VeiculoResponseDTO response = new VeiculoResponseDTO();
+
+        response.setIdVeiculo(veiculo.getIdVeiculo());
+        response.setPlaca(veiculo.getPlaca());
+        response.setMarca(veiculo.getMarca());
+        response.setModelo(veiculo.getModelo());
+        response.setAno(veiculo.getAno());
+        response.setCor(veiculo.getCor());
+        response.setTipoVeiculo(veiculo.getTipoVeiculo());
+        response.setAtivo(veiculo.getAtivo());
+
+        return response;
+    }
+
     public VeiculoResponseDTO salvar(VeiculoRequestDTO request) {
         Veiculo veiculo = new Veiculo();
 //Vai nada mais que dizer os valores que o susário vai preencher quando ele for cadastrar um veículo
@@ -72,6 +88,13 @@ public class VeiculoService {
 
     }
 
+    public VeiculoResponseDTO buscarPorId(Long id) {
+
+        Veiculo veiculo = veiculoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Veículo não encontrado"));
+
+        return converterParaResponse(veiculo);
+    }
 
     public VeiculoResponseDTO atualizar(Long id, VeiculoRequestDTO request) {
 

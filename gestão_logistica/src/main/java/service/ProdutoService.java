@@ -83,6 +83,13 @@ public class ProdutoService {
             return response;
         }
 
+    public List<ProdutoResponseDTO> listar() {
+        return produtoRepository.findAll()
+                .stream()
+                .map(this::converterParaResponse)
+                .toList();
+    }
+
     private ProdutoResponseDTO converterParaResponse(Produto produto) {
 
         ProdutoResponseDTO response = new ProdutoResponseDTO();

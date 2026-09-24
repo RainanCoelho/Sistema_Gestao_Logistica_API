@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EntregaResponse {
+public class EntregaResponseDTO {
 
     private Long idEntrega;
     private LocalDateTime dataHoraPrevista;

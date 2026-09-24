@@ -1,6 +1,9 @@
 package controller;
 
+import DTO.Pagamento.PagamentoRequestDTO;
+import DTO.Pagamento.PagamentoResponseDTO;
 import entity.Pagamento;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.PagamentoService;
@@ -18,44 +21,46 @@ public class PagamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<Pagamento> salvar(
-            @RequestBody Pagamento pagamento) {
+    public ResponseEntity<PagamentoResponseDTO> salvar(
+            @RequestBody PagamentoRequestDTO request) {
 
-        return ResponseEntity.ok(
-                pagamentoService.salvar(pagamento)
-        );
+        PagamentoResponseDTO response = pagamentoService.salvar(request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<Pagamento>> listar() {
+    public ResponseEntity<List<PagamentoResponseDTO>> listar() {
 
-        return ResponseEntity.ok(
-                pagamentoService.listar()
-        );
+        List<PagamentoResponseDTO> response = pagamentoService.listar();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pagamento> buscarPorId(
-            @PathVariable Long id) {
+    public ResponseEntity<PagamentoResponseDTO> buscarPorId(
+            @PathVariable("id") Long id) {
 
-        return ResponseEntity.ok(
-                pagamentoService.buscarPorId(id)
-        );
+        PagamentoResponseDTO response = pagamentoService.buscarPorId(id);
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pagamento> atualizar(
-            @PathVariable Long id,
-            @RequestBody Pagamento pagamento) {
+    public ResponseEntity<PagamentoResponseDTO> atualizar(
+            @PathVariable("id") Long id,
+            @RequestBody PagamentoRequestDTO request) {
 
-        return ResponseEntity.ok(
-                pagamentoService.atualizar(id, pagamento)
-        );
+        PagamentoResponseDTO response = pagamentoService.atualizar(id, request);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
 
         pagamentoService.excluir(id);
 

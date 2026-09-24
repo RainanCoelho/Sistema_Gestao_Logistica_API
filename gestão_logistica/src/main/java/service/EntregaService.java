@@ -1,7 +1,7 @@
 package service;
 
 import DTO.Entrega.EntregaRequestDTO;
-import DTO.Entrega.EntregaResponse;
+import DTO.Entrega.EntregaResponseDTO;
 import entity.Entrega;
 import entity.Produto;
 import entity.Usuario;
@@ -35,7 +35,7 @@ public class EntregaService {
             this.veiculoRepository = veiculoRepository;
         }
 
-        public EntregaResponse salvar(EntregaRequestDTO request) {
+        public EntregaResponseDTO salvar(EntregaRequestDTO request) {
 
             Usuario motorista = usuarioRepository
                     .findById(request.getIdMotorista())
@@ -71,37 +71,60 @@ public class EntregaService {
             return converterParaResponse(entregaSalva);
         }
 
-        public List<EntregaResponse> listar() {
+        public List<EntregaResponseDTO> listar() {
 
             List<Entrega> entregas = entregaRepository.findAll();
 
-            List<EntregaResponse> responses = new ArrayList<>();
+            List<EntregaResponseDTO> responses = new ArrayList<>();
 
             for (Entrega entrega : entregas) {
-                EntregaResponse response = converterParaResponse(entrega);
+                EntregaResponseDTO response = converterParaResponse(entrega);
                 responses.add(response);
             }
 
             return responses;
         }
 
-        public EntregaResponse buscarPorId(Long id) {
+        public EntregaResponseDTO buscarPorId(Long id) {
 
             Entrega entrega = buscarEntidadePorId(id);
 
             return converterParaResponse(entrega);
         }
 
-        public EntregaResponse atualizarStatus(Long id, String novoStatus) {
+        public EntregaResponseDTO atualizar(Long id, EntregaRequestDTO request) {
 
-            Entrega entrega = buscarEntidadePorId(id);
 
-            entrega.setStatusEntrega(novoStatus);
+        Entrega entrega = buscarEntidadePorId(id);
 
-            Entrega entregaAtualizada = entregaRepository.save(entrega);
 
-            return converterParaResponse(entregaAtualizada);
-        }
+        Usuario motorista = usuarioRepository.findById(request.getIdMotorista())
+                .orElseThrow(() ->
+                        new RuntimeException("Motorista não encontrado"));
+
+        Usuario cliente = usuarioRepository.findById(request.getIdCliente())
+                .orElseThrow(() ->
+                        new RuntimeException("Cliente não encontrado"));
+
+        Produto produto = produtoRepository.findById(request.getIdProduto())
+                .orElseThrow(() ->
+                        new RuntimeException("Produto não encontrado"));
+
+        Veiculo veiculo = veiculoRepository.findById(request.getIdVeiculo())
+                .orElseThrow(() ->
+                        new RuntimeException("Veículo não encontrado"));
+
+        // Atualiza as associações da entrega
+        entrega.setMotorista(motorista);
+        entrega.setCliente(cliente);
+        entrega.setProduto(produto);
+        entrega.setVeiculo(veiculo);
+
+        // Salva e devolve os dados atualizados como DTO
+        Entrega entregaAtualizada = entregaRepository.save(entrega);
+
+        return converterParaResponse(entregaAtualizada);
+    }
 
         private Entrega buscarEntidadePorId(Long id) {
 
@@ -110,9 +133,18 @@ public class EntregaService {
                             new RuntimeException("Entrega não encontrada"));
         }
 
-        private EntregaResponse converterParaResponse(Entrega entrega) {
+         public void excluir(Long id) {
 
-            EntregaResponse response = new EntregaResponse();
+        Entrega entrega = entregaRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Entrega não encontrada"));
+
+        entregaRepository.delete(entrega);
+         }
+
+        private EntregaResponseDTO converterParaResponse(Entrega entrega) {
+
+            EntregaResponseDTO response = new EntregaResponseDTO();
 
             response.setIdEntrega(entrega.getIdEntrega());
             response.setDataHoraPrevista(entrega.getDataHoraPrevista());

@@ -1,6 +1,8 @@
 package controller;
 
+import DTO.ItemProduto.ItemProdutoResponseDTO;
 import entity.ItemProduto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.ItemProdutoService;
@@ -17,39 +19,40 @@ public class ItemProdutoController {
         this.itemProdutoService = itemProdutoService;
     }
 
-    @PostMapping
-    public ResponseEntity<ItemProduto> salvar(
-            @RequestBody ItemProduto itemProduto,
-            @RequestParam Long produtoId) {
+    @PostMapping("/produto/{idProduto}")
+    public ResponseEntity<ItemProdutoResponseDTO> salvar(
+            @PathVariable("idProduto") Long idProduto) {
 
-        return ResponseEntity.ok(
-                itemProdutoService.salvar(
-                        itemProduto,
-                        produtoId
-                )
-        );
+        ItemProdutoResponseDTO response =
+                itemProdutoService.salvar(idProduto);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemProduto>> listar() {
+    public ResponseEntity<List<ItemProdutoResponseDTO>> listar() {
 
-        return ResponseEntity.ok(
-                itemProdutoService.listar()
-        );
+        List<ItemProdutoResponseDTO> response =
+                itemProdutoService.listar();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemProduto> buscarPorId(
-            @PathVariable Long id) {
+    public ResponseEntity<ItemProdutoResponseDTO> buscarPorId(
+            @PathVariable("id") Long id) {
 
-        return ResponseEntity.ok(
-                itemProdutoService.buscarPorId(id)
-        );
+        ItemProdutoResponseDTO response =
+                itemProdutoService.buscarPorId(id);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
 
         itemProdutoService.excluir(id);
 
